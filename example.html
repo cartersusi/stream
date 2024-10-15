@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+  <video id="videoPlayer" controls>
+    <source src="/music/index.m3u8" type="application/x-mpegURL">
+    <source src="/music/index.mpd" type="application/dash+xml">
+    <source src="/music.mp4" type="video/mp4">
+  </video>
+  <script>
+    var video = document.querySelector("#videoPlayer");
+    var dashUrl = "/music/index.mpd";
+    var hlsUrl = "/music/index.m3u8";
+
+    if (Hls.isSupported()) {
+      var hls = new Hls();
+      hls.loadSource(hlsUrl);
+      hls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = hlsUrl;
+    } else if (dashjs.supportsMediaSource()) {
+      var player = dashjs.MediaPlayer().create();
+      player.initialize(video, dashUrl, true);
+    }
+  </script>
+</body>
+</html>
